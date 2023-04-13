@@ -1,10 +1,71 @@
-var button = document.getElementById("enter");
-var input = document.getElementById("userinput");
-var ul =document.querySelector("ul");
-var liNodeList = document.querySelectorAll("li");
-var liArray = Array.from(liNodeList);
-var delButton = document.getElementsByClassName("del");
-var delButtonArray = Array.from(delButton);
+const button = document.getElementById("enter");
+const input = document.getElementById("userinput");
+const ul = document.querySelector("ul");
+let liNodeList = document.querySelectorAll("li");
+let liArray = Array.from(liNodeList);
+let delButton = document.getElementsByClassName("del");
+let delButtonArray = Array.from(delButton);
+
+const wrapper = document.getElementById("tiles");
+
+let columns = 0,
+    rows = 0,
+    count = -1;
+
+const colors = [
+    "rgb(229, 57, 53)",
+    "rgb(253, 216, 53)",
+    "rgb(244, 81, 30)",
+    "rgb(76, 175, 80)",
+    "rgb(33, 150, 243)",
+    "rgb(156, 39, 176)",
+];
+
+const handleOnClick = index => {
+    count++;
+    anime({
+        targets: ".tile",
+        backgroundColor: colors[count % (colors.length - 1)],
+        delay: anime.stagger(50, {
+            grid: [columns, rows],
+            from: index
+        })
+    });
+}
+
+const createTile = index => {
+  const tile = document.createElement("div");
+  
+  tile.classList.add("tile");
+  
+  tile.onclick = e => handleOnClick(index);
+  
+  return tile;
+}
+
+const createTiles = quantity => {
+  Array.from(Array(quantity)).map((tile, index) => {
+    wrapper.appendChild(createTile(index));
+  });
+}
+
+const createGrid = () => {
+  wrapper.innerHTML = "";
+  
+  const size = document.body.clientWidth > 800 ? 100 : 50;
+  
+  columns = Math.floor(document.body.clientWidth / size);
+  rows = Math.floor(document.body.clientHeight / size);
+  
+  wrapper.style.setProperty("--columns", columns);
+  wrapper.style.setProperty("--rows", rows);
+  
+  createTiles(columns * rows);
+}
+
+createGrid();
+
+window.onresize = () => createGrid();
 
 function inputLength(){
     return input.value.length;
@@ -24,7 +85,6 @@ function createListElement(){
     input.value = "";
 }
 
-
 function addListAfterClick(){
     if(inputLength() > 0){
         createListElement()
@@ -41,7 +101,13 @@ function removeParentLi(event){
     event.target.parentElement.remove();
 }
 
-// cant get this to work? li is undefined? wow... thank you chatgpt... event.target now
+function keepFocus(event) {
+    var blurEl = this;
+    setTimeout(function() {
+      blurEl.focus()
+    }, 10)
+};
+
 function markDone(event){
     event.target.classList.toggle("done");
 }
@@ -53,3 +119,7 @@ button.addEventListener("click", addListAfterClick);
 input.addEventListener("keypress", addListAfterKeypress);
 
 liArray.forEach(li => li.addEventListener("click", markDone));
+
+input.onblur = keepFocus;
+
+window.onload = input.focus();

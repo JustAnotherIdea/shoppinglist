@@ -8,18 +8,25 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <h1>Shopping List</h1>
-    <p id="first">Get it done today</p>
-    <input id="userinput" type="text" placeholder="enter items">
-    <button id="enter">Click Me!</button>
-    <ul>
-        <li><button class="del">X</button>Notebook</li>
-        <li><button class="del">X</button>Jello</li>
-        <li><button class="del">X</button>Spinach</li>
-        <li><button class="del">X</button>Rice</li>
-        <li><button class="del">X</button>Birthday Cake</li>
-        <li><button class="del">X</button>Candles</li>
-    </ul>
+    <div id="tiles"></div>
+    <div id="pageContainer">
+        <div id="topSpacer"></div>
+        <header>Shopping List</header>
+        <p>Get it done with style!</p>
+        <div class="content">
+            <input id="userinput" type="text" placeholder="enter items">
+            <button id="enter">Add Item</button>
+        </div>
+        <ul class="content">
+            <li><button class="del">X</button>Notebook</li>
+            <li><button class="del">X</button>Jello</li>
+            <li><button class="del">X</button>Spinach</li>
+            <li><button class="del">X</button>Rice</li>
+            <li><button class="del">X</button>Birthday Cake</li>
+            <li><button class="del">X</button>Candles</li>
+        </ul>
+    </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script type="text/javascript" src="script.js"></script>
 </body>
 </html>
