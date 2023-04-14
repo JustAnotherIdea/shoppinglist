@@ -127,7 +127,7 @@ window.mobileCheck = function() {
     return check;
 };
 
-if (window.mobileCheck){
+if (!window.mobileCheck()){
     input.onblur = keepFocus;
     window.onload = input.focus();
 }
