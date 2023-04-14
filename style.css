@@ -63,6 +63,7 @@ p {
 .colorPicker {
     display: inline-block;
     height: 50px;
+    width: 100px;
 }
 
 .content {
@@ -169,9 +170,13 @@ input:focus {
     #enter {
         font-size: 1em;
     }
+    .colorPicker {
+        height: 40px;
+        width: 80px;
+    }
 }
 
-@media screen and (max-height: 350px) {
+@media screen and (max-height: 370px) {
     p {
         display: none;
     }
