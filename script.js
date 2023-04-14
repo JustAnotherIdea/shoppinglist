@@ -1,6 +1,8 @@
 const button = document.getElementById("enter");
 const input = document.getElementById("userinput");
 const ul = document.querySelector("ul");
+const colorPicker = document.getElementById("color");
+const colorText = document.getElementById("colorText");
 let liNodeList = document.querySelectorAll("li");
 let liArray = Array.from(liNodeList);
 let delButton = document.getElementsByClassName("del");
@@ -12,25 +14,47 @@ let columns = 0,
     rows = 0,
     count = -1;
 
-const colors = [
-    "rgb(229, 57, 53)",
-    "rgb(253, 216, 53)",
-    "rgb(244, 81, 30)",
-    "rgb(76, 175, 80)",
-    "rgb(33, 150, 243)",
-    "rgb(156, 39, 176)",
+let colors = [
+    "#E53935",
+    "#FDD835",
+    "#F4511E",
+    "#4CAF50",
+    "#2196F3",
+    "#9C27B0",
 ];
 
+let colorCurrent = "#000000";
+
+wrapper.style.setProperty("--colorCurrent", colorCurrent);
+
+function setColorText(){
+    colorText.innerHTML = "Color: " + colorPicker.value.toUpperCase();
+}
+
+function copyColorCode(){
+    navigator.clipboard.writeText(colorPicker.value.toUpperCase());
+    alert("Copied " + colorPicker.value.toUpperCase() + " to clipboard.");
+}
+
+colorPicker.addEventListener("change", function(){
+    colors.splice(count+1, 0, colorPicker.value);
+    setColorText();
+});
+
 const handleOnClick = index => {
+    colorPicker.value=colors[count+1];
+    colorCurrent = colors[count+1];
+    setColorText();
     count++;
     anime({
         targets: ".tile",
-        backgroundColor: colors[count % (colors.length - 1)],
+        backgroundColor: colors[count],
         delay: anime.stagger(50, {
             grid: [columns, rows],
             from: index
         })
     });
+    if (count === colors.length -1) count = -1;
 }
 
 const createTile = index => {
@@ -61,6 +85,8 @@ const createGrid = () => {
   wrapper.style.setProperty("--rows", rows);
   
   createTiles(columns * rows);
+
+  wrapper.style.setProperty("--colorCurrent", colorCurrent);
 }
 
 createGrid();
@@ -104,7 +130,7 @@ function removeParentLi(event){
 function keepFocus(event) {
     var blurEl = this;
     setTimeout(function() {
-      blurEl.focus()
+    blurEl.focus()
     }, 10)
 };
 
@@ -127,7 +153,14 @@ window.mobileCheck = function() {
     return check;
 };
 
-if (!window.mobileCheck()){
-    input.onblur = keepFocus;
-    window.onload = input.focus();
+colorText.addEventListener("click", copyColorCode);
+
+//get this to let user select colorText? Decided to just copy to clipboard instead.
+window.onload = (event) => {
+    if (!window.mobileCheck()){
+        input.onblur = keepFocus;
+        input.focus();
+    }
+    colorPicker.value = "#000000";
+    setColorText();
 }
