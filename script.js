@@ -93,8 +93,32 @@ createGrid();
 
 window.onresize = () => createGrid();
 
+function markDone(event){
+    if(event.target.tagName == "LI"){
+        event.target.classList.toggle("done");
+        if (localStorage.getItem(event.target.childNodes[1].nodeValue) == "notDone"){
+            localStorage.setItem(event.target.childNodes[1].nodeValue, "done");
+        }
+        else{
+            localStorage.setItem(event.target.childNodes[1].nodeValue, "notDone");
+        }
+    }
+}
+
 function inputLength(){
     return input.value.length;
+}
+
+function inputExists(){
+    if(localStorage.getItem(input.value) == null) return false;
+    else{
+        alert("Item already exists.");
+        return true;
+    }
+}
+
+function inputIsValid(){
+    return /\S/.test(input.value);
 }
 
 function createListElement(){
@@ -108,23 +132,43 @@ function createListElement(){
     ul.appendChild(li);
     liArray.push(li);
     li.addEventListener("click", markDone);
+    localStorage.setItem(input.value, "notDone");
     input.value = "";
 }
 
+function initializeList() {
+    for (let i = 0; i < localStorage.length; i++) {
+        var li = document.createElement("li");
+        var newDelButton = document.createElement("button");
+        newDelButton.innerHTML = "X";
+        newDelButton.className = "del";
+        newDelButton.addEventListener("click", removeParentLi);
+        li.appendChild(newDelButton);
+        li.appendChild(document.createTextNode(localStorage.key(i)));
+        if(localStorage.getItem(localStorage.key(i)) == "done"){
+            li.classList.toggle("done");
+        }
+        ul.appendChild(li);
+        liArray.push(li);
+        li.addEventListener("click", markDone);
+    }
+}
+
 function addListAfterClick(){
-    if(inputLength() > 0){
+    if(inputIsValid() && !inputExists()){
         createListElement()
     }
 }
 
 function addListAfterKeypress(event){
-    if(inputLength() > 0 && event.code === "Enter"){
+    if(inputIsValid() && event.code === "Enter" && !inputExists()){
         createListElement()
     }
 }
 
 function removeParentLi(event){
     event.target.parentElement.remove();
+    localStorage.removeItem(event.target.parentElement.childNodes[1].nodeValue);
 }
 
 function keepFocus(event) {
@@ -133,10 +177,6 @@ function keepFocus(event) {
     blurEl.focus()
     }, 10)
 };
-
-function markDone(event){
-    event.target.classList.toggle("done");
-}
 
 delButtonArray.forEach(del => del.addEventListener("click", removeParentLi));
 
@@ -157,6 +197,7 @@ colorText.addEventListener("click", copyColorCode);
 
 //get this to let user select colorText? Decided to just copy to clipboard instead.
 window.onload = (event) => {
+    initializeList();
     if (!window.mobileCheck()){
         input.onblur = keepFocus;
         input.focus();
