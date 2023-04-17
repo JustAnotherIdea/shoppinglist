@@ -1,12 +1,13 @@
-const button = document.getElementById("enter");
+const enter = document.getElementById("enter");
 const input = document.getElementById("userinput");
 const ul = document.querySelector("ul");
 const colorPicker = document.getElementById("color");
 const colorText = document.getElementById("colorText");
-let liNodeList = document.querySelectorAll("li");
-let liArray = Array.from(liNodeList);
-let delButton = document.getElementsByClassName("del");
-let delButtonArray = Array.from(delButton);
+const colButton = document.getElementById("columnToggle");
+
+colButton.onclick = () => {
+    ul.classList.toggle("columnsOn");
+}
 
 const wrapper = document.getElementById("tiles");
 
@@ -27,11 +28,11 @@ let colorCurrent = "#000000";
 
 wrapper.style.setProperty("--colorCurrent", colorCurrent);
 
-function setColorText(){
+const setColorText = () => {
     colorText.innerHTML = "Color: " + colorPicker.value.toUpperCase();
 }
 
-function copyColorCode(){
+const copyColorCode = () => {
     navigator.clipboard.writeText(colorPicker.value.toUpperCase());
     alert("Copied " + colorPicker.value.toUpperCase() + " to clipboard.");
 }
@@ -93,7 +94,7 @@ createGrid();
 
 window.onresize = () => createGrid();
 
-function markDone(event){
+const markDone = (event) => {
     if(event.target.tagName == "LI"){
         event.target.classList.toggle("done");
         if (localStorage.getItem(event.target.childNodes[1].nodeValue) == "notDone"){
@@ -105,11 +106,11 @@ function markDone(event){
     }
 }
 
-function inputLength(){
+const inputLength = () => {
     return input.value.length;
 }
 
-function inputExists(){
+const inputExists = () => {
     if(localStorage.getItem(input.value) == null) return false;
     else{
         alert("Item already exists.");
@@ -117,29 +118,28 @@ function inputExists(){
     }
 }
 
-function inputIsValid(){
+const inputIsValid = () => {
     return /\S/.test(input.value);
 }
 
-function createListElement(){
-    var li = document.createElement("li");
-    var newDelButton = document.createElement("button");
+const createListElement = () => {
+    let li = document.createElement("li");
+    let newDelButton = document.createElement("button");
     newDelButton.innerHTML = "X";
     newDelButton.className = "del";
     newDelButton.addEventListener("click", removeParentLi);
     li.appendChild(newDelButton);
     li.appendChild(document.createTextNode(input.value));
     ul.appendChild(li);
-    liArray.push(li);
     li.addEventListener("click", markDone);
     localStorage.setItem(input.value, "notDone");
     input.value = "";
 }
 
-function initializeList() {
+const initializeList = () => {
     for (let i = 0; i < localStorage.length; i++) {
-        var li = document.createElement("li");
-        var newDelButton = document.createElement("button");
+        let li = document.createElement("li");
+        let newDelButton = document.createElement("button");
         newDelButton.innerHTML = "X";
         newDelButton.className = "del";
         newDelButton.addEventListener("click", removeParentLi);
@@ -149,42 +149,37 @@ function initializeList() {
             li.classList.toggle("done");
         }
         ul.appendChild(li);
-        liArray.push(li);
         li.addEventListener("click", markDone);
     }
 }
 
-function addListAfterClick(){
+const addListAfterClick = () => {
     if(inputIsValid() && !inputExists()){
         createListElement()
     }
 }
 
-function addListAfterKeypress(event){
+const addListAfterKeypress = (event) => {
     if(inputIsValid() && event.code === "Enter" && !inputExists()){
         createListElement()
     }
 }
 
-function removeParentLi(event){
+const removeParentLi = (event) => {
     event.target.parentElement.remove();
     localStorage.removeItem(event.target.parentElement.childNodes[1].nodeValue);
 }
 
-function keepFocus(event) {
-    var blurEl = this;
+const keepInputFocus = (event) => {
+    let blurEl = event.target;
     setTimeout(function() {
     blurEl.focus()
     }, 10)
 };
 
-delButtonArray.forEach(del => del.addEventListener("click", removeParentLi));
-
-button.addEventListener("click", addListAfterClick);
+enter.addEventListener("click", addListAfterClick);
 
 input.addEventListener("keypress", addListAfterKeypress);
-
-liArray.forEach(li => li.addEventListener("click", markDone));
 
 //https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser/11381730#11381730
 window.mobileCheck = function() {
@@ -199,7 +194,7 @@ colorText.addEventListener("click", copyColorCode);
 window.onload = (event) => {
     initializeList();
     if (!window.mobileCheck()){
-        input.onblur = keepFocus;
+        input.onblur = keepInputFocus;
         input.focus();
     }
     colorPicker.value = "#000000";

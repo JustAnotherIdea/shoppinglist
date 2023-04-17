@@ -2,6 +2,7 @@ body {
     margin: 0px;
     user-select: none;
     overflow: hidden;
+    caret-color: transparent;
 }
 
 #tiles {
@@ -76,19 +77,18 @@ p {
     line-height: 0px;
     margin-top: 0px;
     user-select: text;
-    /* text-transform: uppercase; */
 }
 
 ul {
     list-style: none;
     overflow: auto;
     overscroll-behavior-y: auto;
+}
+
+.columnsOn {
     display: grid;
-    width: calc(100% - 1em);
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    /* overflow-wrap: break-word;
-    word-wrap: break-word;
-    word-break: break-all; */
+    width: calc(100% - 1em);
 }
 
 .del {
@@ -106,10 +106,23 @@ ul {
 
 .del:hover {background-color: rgb(204, 0, 0)}
 
-button:active, #enter:active {
+button:active, #enter:active, #columnToggle:active {
     box-shadow: 0 2px #666;
     transform: translateY(3px);
 }
+
+#columnToggle {
+    font-size: 0.45em;
+    height: 2.2em;
+    cursor: pointer;
+    outline: none;
+    background-color: rgb(128, 87, 0);
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 5px #999;
+}
+
+#columnToggle:hover {background-color: rgb(100, 69, 0)}
 
 #enter {
     font-size: 0.45em;
@@ -128,6 +141,7 @@ input{
     width: 320px;
     font-size: 1.5rem;
     transform: translateY(5px);
+    caret-color: auto;
 }
 
 input:focus {
