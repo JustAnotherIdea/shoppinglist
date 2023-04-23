@@ -44,6 +44,7 @@ body {
         align-items: center;
         justify-content: flex-start;
         pointer-events: none;
+        /* justify-self: */
 }
 
 #topSpacer {
